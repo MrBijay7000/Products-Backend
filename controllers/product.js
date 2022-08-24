@@ -68,12 +68,34 @@ exports.getProduct = async (req, res, next) => {
         quantity: product.quantity,
         id: product._id,
         categoryName: category.name,
-        _version: product.__v,
+        _version: product._v,
       };
+      console.log({ obj });
       return obj;
     })
   );
   res.json(arr);
+};
+
+exports.getProductById = (req, res, next) => {
+  Product.findById({ _id: req.params.id }).then((product) => {
+    const obj = {
+      name: product.name,
+      price: product.price,
+      quantity: product.quantity,
+      id: product._id,
+      categoryId: product.category,
+      version: product.__v,
+    };
+    console.log({ obj });
+    if (product) {
+      res.status(200).json(obj);
+    } else {
+      res.status(200).json({
+        message: "Product Not Found",
+      });
+    }
+  });
 };
 
 exports.deleteProduct = (req, res, next) => {
@@ -82,5 +104,24 @@ exports.deleteProduct = (req, res, next) => {
     res.status(200).json({
       message: "Products Delete Successfully!",
     });
+  });
+};
+
+exports.updateProduct = (req, res, next) => {
+  const product = new Product({
+    _id: req.body.id,
+    name: req.body.productName,
+    price: req.body.productPrice,
+    quantity: req.body.productQuantity,
+    category: req.body.category,
+  });
+  console.log({ product });
+  Product.updateOne({ _id: req.body.id }, product).then((updatedProduct) => {
+    console.log({ updatedProduct });
+    // if (updatedProduct.modifiedCount > 0) {
+    //   res.status(200).json({
+    //     message: "Product Updated Successfully!",
+    //   });
+    // } else res.sendStatus(500);
   });
 };
