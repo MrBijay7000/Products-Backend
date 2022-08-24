@@ -59,6 +59,7 @@ exports.UpdateCategory = (req, res, next) => {
     _id: req.body.id,
     name: req.body.name,
   });
+  console.log({ category });
 
   Category.updateOne({ _id: req.body.id }, category).then((result) => {
     console.log({ result });

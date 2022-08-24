@@ -61,7 +61,7 @@ exports.createProduct = (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   const products = await Product.find();
-  console.log({ products });
+
   const arr = await Promise.all(
     products.map(async (product) => {
       const category = await Category.findById(product.category);
@@ -85,6 +85,7 @@ exports.getProduct = async (req, res, next) => {
 
 exports.getProductById = (req, res, next) => {
   Product.findById({ _id: req.params.id }).then((product) => {
+    console.log({ product });
     const obj = {
       name: product.name,
       price: product.price,
@@ -114,6 +115,7 @@ exports.deleteProduct = (req, res, next) => {
 };
 
 exports.updateProduct = (req, res, next) => {
+  console.log("Updated");
   const product = new Product({
     _id: req.body.id,
     name: req.body.productName,
@@ -122,12 +124,14 @@ exports.updateProduct = (req, res, next) => {
     category: req.body.category,
   });
   console.log({ product });
-  Product.updateOne({ _id: req.body.id }, product).then((updatedProduct) => {
-    console.log({ updatedProduct });
-    // if (updatedProduct.modifiedCount > 0) {
-    //   res.status(200).json({
-    //     message: "Product Updated Successfully!",
-    //   });
-    // } else res.sendStatus(500);
+  Product.updateOne({ _id: req.body.id }, product).then((result) => {
+    console.log({ result });
+    if (result) {
+      res.status(200).json({
+        message: "Product Updated Successfully!",
+      });
+    } else {
+      res.sendStatus(500);
+    }
   });
 };
