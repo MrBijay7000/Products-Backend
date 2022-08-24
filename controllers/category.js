@@ -4,12 +4,14 @@ exports.createCategory = (req, res, next) => {
   const category = new Category({
     name: req.body.categoryName,
   });
+
   category.save().then((createdCategory) => {
     const obj = {
       name: createdCategory.name,
       id: createdCategory._id,
-      _version: createdCategory.__v,
+      _version: createdCategory._v,
     };
+
     res.json({ message: "Category Created", createdCategory: obj });
   });
 };
@@ -22,6 +24,7 @@ exports.fetchCategories = (req, res, next) => {
         id: category._id,
       };
     });
+
     res.json(arr);
   });
 };
@@ -56,7 +59,7 @@ exports.UpdateCategory = (req, res, next) => {
     _id: req.body.id,
     name: req.body.name,
   });
-  console.log({ category });
+
   Category.updateOne({ _id: req.body.id }, category).then((result) => {
     console.log({ result });
     if (result.modifiedCount > 0) {

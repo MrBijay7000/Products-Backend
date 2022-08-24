@@ -8,6 +8,7 @@ exports.createProduct = (req, res, next) => {
     quantity: req.body.productQuantity,
     category: req.body.category,
   });
+  console.log({ product });
 
   product.save().then((createdProduct) => {
     console.log({ createdProduct });
@@ -19,6 +20,7 @@ exports.createProduct = (req, res, next) => {
       categoryId: createdProduct.category,
       _version: createdProduct.__v,
     };
+    console.log({ obj });
     res.json({
       message: "Product Created",
       createdProduct: obj,
@@ -59,19 +61,23 @@ exports.createProduct = (req, res, next) => {
 
 exports.getProduct = async (req, res, next) => {
   const products = await Product.find();
+  console.log({ products });
   const arr = await Promise.all(
     products.map(async (product) => {
       const category = await Category.findById(product.category);
-      const obj = {
-        name: product.name,
-        price: product.price,
-        quantity: product.quantity,
-        id: product._id,
-        categoryName: category.name,
-        _version: product._v,
-      };
-      console.log({ obj });
-      return obj;
+      console.log({ category });
+      if (category) {
+        const obj = {
+          name: product.name,
+          price: product.price,
+          quantity: product.quantity,
+          id: product._id,
+          categoryName: category.name,
+          _version: product._v,
+        };
+
+        return obj;
+      }
     })
   );
   res.json(arr);
