@@ -115,7 +115,6 @@ exports.deleteProduct = (req, res, next) => {
 };
 
 exports.updateProduct = (req, res, next) => {
-  console.log("Updated");
   const product = new Product({
     _id: req.body.id,
     name: req.body.productName,
@@ -123,9 +122,8 @@ exports.updateProduct = (req, res, next) => {
     quantity: req.body.productQuantity,
     category: req.body.category,
   });
-  console.log({ product });
+
   Product.updateOne({ _id: req.body.id }, product).then((result) => {
-    console.log({ result });
     if (result) {
       res.status(200).json({
         message: "Product Updated Successfully!",
