@@ -61,8 +61,7 @@ exports.UpdateCategory = (req, res, next) => {
   });
 
   Category.updateOne({ _id: req.body.id }, category).then((result) => {
-    console.log({ result });
-    if (result.modifiedCount > 0) {
+    if (result) {
       res.status(200).json({
         message: "Category Updated Successfully!",
       });
